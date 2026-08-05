@@ -92,8 +92,6 @@ dockers:
       - --label=org.opencontainers.image.revision={{ .FullCommit }}
       - --label=org.opencontainers.image.licenses=MIT
 docker_manifests:
-    image_templates:
-    image_templates:
   - name_template: ghcr.io/jackchenlucky/{{ .Env.DOCKER_IMAGE_NAME }}:{{ .Version }}
     image_templates:
       - ghcr.io/jackchenlucky/{{ .Env.DOCKER_IMAGE_NAME }}:{{ .Version }}-amd64
