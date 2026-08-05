@@ -111,6 +111,7 @@ func GetGlobalChannelRegistry() *ChannelRegistry {
 		globalChannelRegistry.Register(channels.NewPushMeChannel())
 		globalChannelRegistry.Register(channels.NewNtfyChannel())
 		globalChannelRegistry.Register(channels.NewGotifyChannel())
+		globalChannelRegistry.Register(channels.NewDtalkWorkChannel())
 	})
 	return globalChannelRegistry
 }

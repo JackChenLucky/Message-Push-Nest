@@ -327,6 +327,37 @@ const CONSTANT = {
             taskInsInputs: [
             ],
         },
+        {
+            type: 'DtalkWork',
+            label: '钉钉工作通知',
+            dynamicRecipient: {
+                support: true,
+                field: 'to_user',
+                label: '接收成员ID',
+                desc: '成员userId',
+            },
+            inputs: [
+                { subLabel: '应用ClientId', value: '', col: 'client_id', desc: "钉钉应用 ClientId（AppKey）" },
+                { subLabel: '应用ClientSecret', value: '', col: 'client_secret', desc: "钉钉应用 ClientSecret" },
+                { subLabel: '应用AgentId', value: '', col: 'agent_id', desc: "应用 AgentId" },
+                { subLabel: '自定义API地址', value: '', col: 'api_host', desc: "可选，自定义API地址" },
+                { subLabel: '代理地址', value: '', col: 'proxy_url', desc: "可选，支持 HTTP/HTTPS/SOCKS5 代理" },
+                { subLabel: '渠道名', value: '', col: 'name', desc: "想要设置的渠道名字" },
+            ],
+            tips: {
+                text: "钉钉工作通知说明",
+                desc: "使用钉钉工作通知发送消息。<br />1. 在钉钉开放平台创建企业内部应用获取 ClientId 和 ClientSecret。<br />2. 支持配置自定义 API 域名（如反向代理）。<br />3. 支持 HTTP/HTTPS/SOCKS5 代理。"
+            },
+            taskInsRadios: [
+                { subLabel: 'text', content: 'text' },
+                { subLabel: 'markdown', content: 'markdown' },
+            ],
+            taskInsInputs: [
+                { value: '', col: 'to_user', desc: "接收成员ID (多个用 | 分隔)", label: '接收成员ID' },
+                { value: '', col: 'to_dept', desc: "接收部门ID (多个用 | 分隔，可选)", label: '接收部门ID' },
+                { value: '', col: 'to_all', desc: "发送给全部员工 (true/false，可选)", label: '全部员工' },
+            ],
+        },
     ],
     API_VIEW_DATA: [
         { label: "curl", class: "language-shell line-numbers", code: "", func: ApiStrGenerate.getCurlString },

@@ -271,7 +271,8 @@ const getChannelIcon = (type: string) => {
     'Telegram': Send,
     'Bark': BellRing,
     'Ntfy': Megaphone,
-    'Gotify': ShieldCheck
+    'Gotify': ShieldCheck,
+    'DtalkWork': Zap
   }
   return map[type] || Send // Default icon
 }

@@ -72,4 +72,5 @@ const (
 	ChannelPushMe          = "PushMe"
 	ChannelNtfy            = "Ntfy"
 	ChannelGotify          = "Gotify"
+	ChannelDtalkWork       = "DtalkWork"
 )

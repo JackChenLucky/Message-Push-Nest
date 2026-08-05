@@ -47,6 +47,7 @@ const (
 	ChannelPushMe          = channels.ChannelPushMe
 	ChannelNtfy            = channels.ChannelNtfy
 	ChannelGotify          = channels.ChannelGotify
+	ChannelDtalkWork       = channels.ChannelDtalkWork
 )
 
 // 重导出辅助函数
@@ -74,6 +75,7 @@ func init() {
 	RegisterChannel(ChannelBark, func() Channel { return channels.NewBarkChannel() })
 	RegisterChannel(ChannelNtfy, func() Channel { return channels.NewNtfyChannel() })
 	RegisterChannel(ChannelGotify, func() Channel { return channels.NewGotifyChannel() })
+	RegisterChannel(ChannelDtalkWork, func() Channel { return channels.NewDtalkWorkSDKChannel() })
 	RegisterChannel(ChannelPushMe, func() Channel { return channels.NewPushMeChannel() })
 	RegisterChannel(ChannelCustom, func() Channel { return channels.NewCustomChannel() })
 	RegisterChannel(ChannelWeChatOFAccount, func() Channel { return channels.NewWeChatOFAccountChannel() })

@@ -448,6 +448,7 @@ func (sm *SendMessageService) supportsDynamicRecipient(wayType string) bool {
 		constant.MessageTypeWeChatOFAccount: true,
 		constant.MessageTypeAliyunSMS:       true,
 		constant.MessageTypeQyWeiXinApp:     true,
+		constant.MessageTypeDtalkWork:       true,
 		// 可以继续添加其他支持动态接收者的渠道
 	}
 	return supportedTypes[wayType]
@@ -486,14 +487,16 @@ func (sm *SendMessageService) modifyInsRecipient(ins models.SendTasksIns, recipi
 		return ins
 	}
 
-	// 修改接收者字段
-	if wayType == constant.MessageTypeAliyunSMS {
-		config["phone_number"] = recipient
-	} else if wayType == constant.MessageTypeQyWeiXinApp {
-		config["to_user"] = recipient
-	} else {
-		config["to_account"] = recipient
-	}
+		// 修改接收者字段
+		if wayType == constant.MessageTypeAliyunSMS {
+			config["phone_number"] = recipient
+		} else if wayType == constant.MessageTypeQyWeiXinApp {
+			config["to_user"] = recipient
+		} else if wayType == constant.MessageTypeDtalkWork {
+			config["to_user"] = recipient
+		} else {
+			config["to_account"] = recipient
+		}
 
 	// 序列化回JSON
 	modifiedConfigBytes, err := json.Marshal(config)
