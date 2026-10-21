@@ -32,6 +32,8 @@ const (
 	MessageTypePushMe          = channels.MessageTypePushMe
 	MessageTypeNtfy            = channels.MessageTypeNtfy
 	MessageTypeGotify          = channels.MessageTypeGotify
+	MessageTypeDtalkWork       = channels.MessageTypeDtalkWork
+	MessageTypeDtalkDing       = channels.MessageTypeDtalkDing
 )
 
 // ChannelRegistry 渠道注册表
@@ -112,6 +114,7 @@ func GetGlobalChannelRegistry() *ChannelRegistry {
 		globalChannelRegistry.Register(channels.NewNtfyChannel())
 		globalChannelRegistry.Register(channels.NewGotifyChannel())
 		globalChannelRegistry.Register(channels.NewDtalkWorkChannel())
+		globalChannelRegistry.Register(channels.NewDtalkDingChannel())
 	})
 	return globalChannelRegistry
 }

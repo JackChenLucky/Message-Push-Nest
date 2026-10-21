@@ -2,6 +2,15 @@
 
 ## 2026
 
+### 2026.10.20
+- **新增钉钉 DING 消息渠道（DtalkDing）**
+  - 支持钉钉专业版/专属版 DING 接口，可发送应用内 DING、短信 DING、电话 DING
+  - 支持 text 消息、固定接收人和动态接收者（群发）
+  - 支持应用机器人 RobotCode、电话音色、自定义 API 地址和 HTTP/HTTPS/SOCKS5 代理
+  - 渠道测试可验证 ClientId/ClientSecret 并获取 accessToken
+  - 自动缓存 accessToken，凭据变更后自动刷新
+  - 新增 SDK 渠道 `DtalkDing`
+
 ### 2026.07.02
 - **性能与底层优化**
   - 优化数据库表结构按需迁移逻辑，通过比对模型特征签名避免冗余检测，大幅提升启动速度

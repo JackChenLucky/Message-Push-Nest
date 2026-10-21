@@ -5,6 +5,7 @@ import (
 	"message-nest/models"
 	"message-nest/pkg/app"
 	"message-nest/pkg/constant"
+	"strings"
 )
 
 // InsValidator 实例验证接口
@@ -28,7 +29,8 @@ var insValidatorRegistry = map[string]func() InsValidator{
 	constant.MessageTypePushMe:          func() InsValidator { return &InsPushMeValidator{} },
 	constant.MessageTypeNtfy:            func() InsValidator { return &InsNtfyValidator{} },
 	constant.MessageTypeGotify:          func() InsValidator { return &InsGotifyValidator{} },
-		constant.MessageTypeDtalkWork:       func() InsValidator { return &InsDtalkWorkValidator{} },
+	constant.MessageTypeDtalkWork:       func() InsValidator { return &InsDtalkWorkValidator{} },
+	constant.MessageTypeDtalkDing:       func() InsValidator { return &InsDtalkDingValidator{} },
 }
 
 // checkAllowMultiRecip 检查是否启用了动态接收者模式
@@ -240,6 +242,37 @@ func (v *InsDtalkWorkValidator) Validate(configJson string) (string, interface{}
 
 	if Config.ToUser == "" && Config.ToDept == "" && !Config.ToAll {
 		return "请输入接收成员ID、部门ID 或 勾选全部员工", empty
+	}
+	return "", Config
+}
+
+// InsDtalkDingValidator 钉钉DING配置校验
+type InsDtalkDingValidator struct{}
+
+func (v *InsDtalkDingValidator) Validate(configJson string) (string, interface{}) {
+	var empty interface{}
+	var Config models.InsDtalkDingConfig
+	err := json.Unmarshal([]byte(configJson), &Config)
+	if err != nil {
+		return "钉钉DING配置反序列化失败！", empty
+	}
+
+	if checkAllowMultiRecip(configJson) && strings.TrimSpace(Config.ToUser) == "" {
+		return "", Config
+	}
+
+	userIDs := make(map[string]struct{})
+	for _, item := range strings.Split(Config.ToUser, "|") {
+		userID := strings.TrimSpace(item)
+		if userID != "" {
+			userIDs[userID] = struct{}{}
+		}
+	}
+	if len(userIDs) == 0 {
+		return "请输入接收成员ID", empty
+	}
+	if len(userIDs) > 200 {
+		return "接收成员ID数量不能超过200个", empty
 	}
 	return "", Config
 }

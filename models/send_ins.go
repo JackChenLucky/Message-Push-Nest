@@ -86,6 +86,11 @@ type InsDtalkWorkConfig struct {
 	ToAll  bool   `json:"to_all" label:"发送给全部员工"`
 }
 
+// InsDtalkDingConfig 实例里面的钉钉DING config
+type InsDtalkDingConfig struct {
+	ToUser string `json:"to_user" label:"接收成员ID"`
+}
+
 // ManyAddTaskIns 批量添加实例
 func ManyAddTaskIns(taskIns []SendTasksIns) error {
 	tx := db.Begin()

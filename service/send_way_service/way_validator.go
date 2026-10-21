@@ -36,6 +36,7 @@ var (
 		constant.MessageTypeNtfy:            func() WayValidator { return &WayDetailNtfy{} },
 		constant.MessageTypeGotify:          func() WayValidator { return &WayDetailGotify{} },
 		constant.MessageTypeDtalkWork:       func() WayValidator { return &WayDetailDtalkWork{} },
+		constant.MessageTypeDtalkDing:       func() WayValidator { return &WayDetailDtalkDing{} },
 	}
 	testerRegistry = map[string]func(interface{}) WayTester{
 		constant.MessageTypeEmail:           func(m interface{}) WayTester { return m.(*WayDetailEmail) },
@@ -53,6 +54,7 @@ var (
 		constant.MessageTypeNtfy:            func(m interface{}) WayTester { return m.(*WayDetailNtfy) },
 		constant.MessageTypeGotify:          func(m interface{}) WayTester { return m.(*WayDetailGotify) },
 		constant.MessageTypeDtalkWork:       func(m interface{}) WayTester { return m.(*WayDetailDtalkWork) },
+		constant.MessageTypeDtalkDing:       func(m interface{}) WayTester { return m.(*WayDetailDtalkDing) },
 	}
 )
 
@@ -454,6 +456,43 @@ func (w *WayDetailDtalkWork) Validate(authJson string) (string, interface{}) {
 
 func (w *WayDetailDtalkWork) Test() (string, string) {
 	return "", "钉钉工作通知配置成功，请直接添加实例任务进行发送测试"
+}
+
+// WayDetailDtalkDing 钉钉DING渠道明细字段
+type WayDetailDtalkDing struct {
+	ClientId     string `json:"client_id" validate:"required,max=100" label:"钉钉应用ClientId"`
+	ClientSecret string `json:"client_secret" validate:"required,max=100" label:"钉钉应用ClientSecret"`
+	RobotCode    string `json:"robot_code" validate:"max=100" label:"钉钉机器人RobotCode"`
+	RemindType   int    `json:"remind_type" validate:"required,oneof=1 2 3" label:"DING类型"`
+	CallVoice    string `json:"call_voice" validate:"max=100" label:"电话DING音色"`
+	ApiHost      string `json:"api_host" validate:"max=200" label:"自定义API地址"`
+	ProxyURL     string `json:"proxy_url" validate:"max=200" label:"代理地址"`
+}
+
+func (w *WayDetailDtalkDing) Validate(authJson string) (string, interface{}) {
+	var empty interface{}
+	err := json.Unmarshal([]byte(authJson), w)
+	if err != nil {
+		return "钉钉DING参数反序列化失败！", empty
+	}
+	_, msg := app.CommonPlaygroundValid(*w)
+	return msg, w
+}
+
+func (w *WayDetailDtalkDing) Test() (string, string) {
+	cli := message.DtalkDing{
+		ClientId:     w.ClientId,
+		ClientSecret: w.ClientSecret,
+		RobotCode:    w.RobotCode,
+		RemindType:   w.RemindType,
+		CallVoice:    w.CallVoice,
+		ApiHost:      w.ApiHost,
+		ProxyURL:     w.ProxyURL,
+	}
+	if _, err := cli.GetToken(); err != nil {
+		return fmt.Sprintf("获取钉钉accessToken失败：%s", err), ""
+	}
+	return "", "钉钉DING凭据校验成功，机器人/权限需在发送时验证"
 }
 
 // WayDetailQyWeiXinApp 企业微信自建应用渠道明细字段

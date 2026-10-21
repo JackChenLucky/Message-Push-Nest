@@ -25,6 +25,7 @@ const (
 	MessageTypeNtfy            = constant.MessageTypeNtfy
 	MessageTypeGotify          = constant.MessageTypeGotify
 	MessageTypeDtalkWork       = constant.MessageTypeDtalkWork
+	MessageTypeDtalkDing       = constant.MessageTypeDtalkDing
 )
 
 // UnifiedMessageContent 统一的消息内容结构

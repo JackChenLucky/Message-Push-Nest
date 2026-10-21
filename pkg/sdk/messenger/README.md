@@ -6,7 +6,7 @@
 
 - **零业务依赖**：不依赖数据库、路由、认证等业务代码
 - **开箱即用**：直接传配置 + 消息即可发送
-- **支持 12 种渠道**：Email, 钉钉, 企业微信, 飞书, Telegram, Bark, Ntfy, Gotify, PushMe, 自定义Webhook, 微信公众号, 阿里云短信
+- **支持多种渠道**：Email, 钉钉机器人, 钉钉工作通知, 钉钉 DING, 企业微信, 飞书, Telegram, Bark, Ntfy, Gotify, PushMe, 自定义Webhook, 微信公众号, 阿里云短信
 - **可扩展**：通过 `RegisterChannel` 注册自定义渠道
 
 ## 快速使用
@@ -67,6 +67,30 @@ result, err := client.Send("Telegram", nil, &messenger.Message{
 |------|------|------|
 | `access_token` | ✅ | 钉钉 access_token |
 | `secret` | ❌ | 加签秘钥 |
+
+### DtalkWork（钉钉工作通知）
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| `client_id` | ✅ | 钉钉应用 ClientId（AppKey） |
+| `client_secret` | ✅ | 钉钉应用 ClientSecret |
+| `agent_id` | ✅ | 应用 AgentId |
+| `to_user` | ❌ | 接收成员 userId，多个用 `\|` 分隔 |
+| `to_dept` | ❌ | 接收部门 ID，多个用 `\|` 分隔 |
+| `to_all` | ❌ | 是否发送给全部员工，`true`/`false` |
+| `api_host` | ❌ | 自定义 API 地址 |
+| `proxy_url` | ❌ | 代理地址 (http/https/socks5) |
+
+### DtalkDing（钉钉 DING，专业版/专属版）
+| 参数 | 必填 | 说明 |
+|------|------|------|
+| `client_id` | ✅ | 钉钉应用 ClientId（AppKey） |
+| `client_secret` | ✅ | 钉钉应用 ClientSecret |
+| `to_user` | ✅ | 接收成员 userId，多个用 `\|` 分隔 |
+| `robot_code` | ❌ | 应用机器人 RobotCode，留空使用 `client_id` |
+| `remind_type` | ❌ | 1 应用内 DING（默认）、2 短信 DING、3 电话 DING |
+| `call_voice` | ❌ | 电话 DING 音色，如 `Standard_Female_Voice` |
+| `api_host` | ❌ | 自定义 API 地址，默认 `https://api.dingtalk.com` |
+| `proxy_url` | ❌ | 代理地址 (http/https/socks5) |
 
 ### QyWeiXin（企业微信）
 | 参数 | 必填 | 说明 |

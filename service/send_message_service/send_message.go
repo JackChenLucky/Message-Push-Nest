@@ -113,7 +113,7 @@ func (sm *SendMessageService) SendPreCheck() (models.TaskIns, error) {
 		// 模板模式：使用模板ID获取实例
 		if sm.TemplateID == "" {
 			errStr = "模板模式下 TemplateID 不能为空"
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 
@@ -121,12 +121,12 @@ func (sm *SendMessageService) SendPreCheck() (models.TaskIns, error) {
 		insList, err := models.GetTemplateInsList(sm.TemplateID)
 		if err != nil {
 			errStr = fmt.Sprintf("模板[%s]实例查询失败：%s", sm.TemplateID, err)
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 		if len(insList) == 0 {
 			errStr = fmt.Sprintf("模板[%s]没有关联任何实例！", sm.TemplateID)
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 
@@ -144,7 +144,7 @@ func (sm *SendMessageService) SendPreCheck() (models.TaskIns, error) {
 		// 传统任务模式：使用任务ID查询
 		if sm.TaskID == "" {
 			errStr = "任务模式下 TaskID 不能为空"
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 
@@ -154,17 +154,17 @@ func (sm *SendMessageService) SendPreCheck() (models.TaskIns, error) {
 		task, err := sendTaskService.GetTaskWithIns()
 		if err != nil {
 			errStr = fmt.Sprintf("任务[%s]查询失败！", sm.TaskID)
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 		if task.ID == "" {
 			errStr = fmt.Sprintf("任务[%s]不存在！", sm.TaskID)
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 		if len(task.InsData) == 0 {
 			errStr = fmt.Sprintf("任务[%s]没有关联任何实例！！", sm.TaskID)
-			entry.Errorf(errStr)
+			entry.Error(errStr)
 			return task, errors.New(errStr)
 		}
 		// 设置任务名称用于日志记录
@@ -176,7 +176,7 @@ func (sm *SendMessageService) SendPreCheck() (models.TaskIns, error) {
 	default:
 		// SendMode 未设置或无效
 		errStr = fmt.Sprintf("SendMode 未设置或无效: %s，必须是 '%s' 或 '%s'", sm.SendMode, SendModeTask, SendModeTemplate)
-		entry.Errorf(errStr)
+		entry.Error(errStr)
 		return task, errors.New(errStr)
 	}
 }
@@ -449,6 +449,7 @@ func (sm *SendMessageService) supportsDynamicRecipient(wayType string) bool {
 		constant.MessageTypeAliyunSMS:       true,
 		constant.MessageTypeQyWeiXinApp:     true,
 		constant.MessageTypeDtalkWork:       true,
+		constant.MessageTypeDtalkDing:       true,
 		// 可以继续添加其他支持动态接收者的渠道
 	}
 	return supportedTypes[wayType]
@@ -493,6 +494,8 @@ func (sm *SendMessageService) modifyInsRecipient(ins models.SendTasksIns, recipi
 		} else if wayType == constant.MessageTypeQyWeiXinApp {
 			config["to_user"] = recipient
 		} else if wayType == constant.MessageTypeDtalkWork {
+			config["to_user"] = recipient
+		} else if wayType == constant.MessageTypeDtalkDing {
 			config["to_user"] = recipient
 		} else {
 			config["to_account"] = recipient

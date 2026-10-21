@@ -119,6 +119,82 @@ Message Nest 支持多种消息推送渠道，您可以根据需求配置不同�
 - 机器人被移除后 Webhook 将失效
 :::
 
+## 钉钉 DING 消息（专业版/专属版）
+
+通过钉钉企业内部应用机器人发送 DING 消息，支持应用内 DING、短信 DING、电话 DING，适合强提醒告警。
+
+::: warning 注意
+发送 DING 消息是钉钉**专业版/专属版**专享能力。普通版企业无法调用该接口；短信 DING 和电话 DING 还需要在钉钉管理后台单独购买权益包。
+:::
+
+### 前置条件
+
+1. **企业版本**：企业钉钉为专业版或专属版。
+2. **创建企业内部应用**：在钉钉开放平台创建企业内部应用，获取 `ClientId`（AppKey）和 `ClientSecret`。
+3. **创建应用机器人**：为应用创建机器人并获取 `RobotCode`。多数企业内部应用的 RobotCode 与 ClientId 相同；在渠道配置中留空时会自动使用 ClientId。
+4. **开通权限**：在应用权限中开通“企业机器人发送撤回DING消息”权限（`Premium.Ding.Write`），并发布应用版本。
+5. **购买权益**：短信 DING / 电话 DING 需要在钉钉管理后台“增值服务 → 产品专区”购买对应权益包；未购买时只能发送应用内 DING。
+6. **获取接收人 userId**：接收人必须是企业成员的 userId，可参考钉钉“查询用户详情”或“获取部门用户userid列表”接口。
+
+### 配置参数
+
+| 参数 | 说明 | 必填 |
+|------|------|------|
+| 渠道名称 | 自定义渠道名称 | 是 |
+| 应用ClientId | 钉钉应用 ClientId（AppKey） | 是 |
+| 应用ClientSecret | 钉钉应用 ClientSecret | 是 |
+| 机器人RobotCode | 应用机器人 ID，留空默认使用 ClientId | 否 |
+| DING类型 | 1 应用内 DING、2 短信 DING、3 电话 DING | 是 |
+| 电话DING音色 | 仅电话 DING 有效，如 `Standard_Female_Voice` | 否 |
+| 自定义API地址 | 默认 `https://api.dingtalk.com`，可用于反向代理 | 否 |
+| 代理地址 | HTTP/HTTPS/SOCKS5 代理 | 否 |
+
+### 实例配置
+
+| 参数 | 说明 | 必填 |
+|------|------|------|
+| 接收成员ID | 成员 userId，多个用 `\|` 分隔 | 是（固定接收模式） |
+| 动态接收者 | 发送时通过 API 的 `recipients` 参数指定 userId 列表 | 否 |
+
+动态接收者模式适合模板群发：一个模板只能配置一个动态接收实例，且不能与固定接收实例混用。
+
+### 消息格式
+
+DING 接口只接收纯文本内容，因此本渠道只支持 **text** 格式：
+
+- 如果消息同时提供了标题和正文，发送内容为 `标题 + 换行 + 正文`；
+- 如果只提供标题或正文，则直接发送非空的一方；
+- 不支持 Markdown、HTML、富文本和 @提醒。
+
+### DING 类型说明
+
+| 类型 | 说明 | 接收人上限 |
+|------|------|-----------|
+| 1 | 应用内 DING | 200 |
+| 2 | 短信 DING（需购买权益包） | 20 |
+| 3 | 电话 DING（需购买权益包） | 20 |
+
+一个渠道对应一种 DING 类型；如果需要同时使用应用内 DING 和电话 DING，请创建两个渠道。
+
+### 注意事项
+
+::: warning 注意
+- DING 接口是专业版/专属版专享接口，普通版会调用失败。
+- 应用需要创建机器人并开通 `Premium.Ding.Write` 权限。
+- 短信/电话 DING 需要购买权益包，权益不足时接口返回 `ding.serverquota.insufficient`。
+- 应用内 DING 单次最多 200 个接收人，短信/电话 DING 单次最多 20 个接收人。
+- 接收人必须在应用的可见范围内，否则接口会返回无效接收者错误。
+- 机器人每分钟最多发送 6000 条消息。
+- 不支持群聊、部门、全员、@提醒和 Markdown。
+- 修改 ClientId/ClientSecret 后，渠道会自动重新获取 accessToken。
+- 如果测试返回 `invalidClientIdOrSecret`，请检查 ClientId/ClientSecret 是否属于当前企业、应用是否已发布且未被删除。
+:::
+
+### 官方文档
+
+- [发送 DING 消息](https://open.dingtalk.com/document/development/robot-sends-nail-message)
+- [获取企业内部应用的 accessToken](https://open.dingtalk.com/document/development/obtain-the-access-token-of-an-internal-app)
+
 ## 企业微信机器人
 
 通过企业微信群机器人发送消息到企业微信群。

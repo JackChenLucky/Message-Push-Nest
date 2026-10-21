@@ -211,6 +211,9 @@ const getFinalData = () => {
         if (config.type == 'Gotify' && input.col == 'priority') {
           authData[input.col] = parseInt(formData.value[input.col])
         }
+        if (config.type == 'DtalkDing' && input.col == 'remind_type') {
+          authData[input.col] = parseInt(formData.value[input.col])
+        }
       }
     })
   }
@@ -272,7 +275,8 @@ const getChannelIcon = (type: string) => {
     'Bark': BellRing,
     'Ntfy': Megaphone,
     'Gotify': ShieldCheck,
-    'DtalkWork': Zap
+    'DtalkWork': Zap,
+    'DtalkDing': Zap
   }
   return map[type] || Send // Default icon
 }

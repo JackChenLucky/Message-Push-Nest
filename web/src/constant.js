@@ -358,6 +358,36 @@ const CONSTANT = {
                 { value: '', col: 'to_all', desc: "发送给全部员工 (true/false，可选)", label: '全部员工' },
             ],
         },
+        {
+            type: 'DtalkDing',
+            label: '钉钉DING',
+            dynamicRecipient: {
+                support: true,
+                field: 'to_user',
+                label: '接收成员ID',
+                desc: '成员userId，多个用 | 分隔',
+            },
+            inputs: [
+                { subLabel: '应用ClientId', value: '', col: 'client_id', desc: "钉钉应用 ClientId（AppKey）" },
+                { subLabel: '应用ClientSecret', value: '', col: 'client_secret', desc: "钉钉应用 ClientSecret" },
+                { subLabel: '机器人RobotCode', value: '', col: 'robot_code', desc: "可选，留空默认使用 ClientId" },
+                { subLabel: 'DING类型', value: '1', col: 'remind_type', desc: "1-应用内DING，2-短信DING，3-电话DING" },
+                { subLabel: '电话DING音色', value: '', col: 'call_voice', desc: "可选，仅电话DING有效，如 Standard_Female_Voice" },
+                { subLabel: '自定义API地址', value: '', col: 'api_host', desc: "可选，默认 https://api.dingtalk.com" },
+                { subLabel: '代理地址', value: '', col: 'proxy_url', desc: "可选，支持 HTTP/HTTPS/SOCKS5 代理" },
+                { subLabel: '渠道名', value: '', col: 'name', desc: "想要设置的渠道名字" },
+            ],
+            tips: {
+                text: "钉钉DING说明",
+                desc: "使用钉钉专业版/专属版 DING 消息。<br />1. 在钉钉开放平台创建企业内部应用，获取 ClientId/ClientSecret，并创建应用机器人。<br />2. 应用需开通“企业机器人发送撤回DING消息”权限。<br />3. 短信/电话DING需在钉钉管理后台购买权益包。<br />4. 接收人为成员 userId，多个用 | 分隔。"
+            },
+            taskInsRadios: [
+                { subLabel: 'text', content: 'text' },
+            ],
+            taskInsInputs: [
+                { value: '', col: 'to_user', desc: "接收成员ID (多个用 | 分隔)", label: '接收成员ID' },
+            ],
+        },
     ],
     API_VIEW_DATA: [
         { label: "curl", class: "language-shell line-numbers", code: "", func: ApiStrGenerate.getCurlString },
